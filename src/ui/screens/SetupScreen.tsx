@@ -1,5 +1,6 @@
 // src/ui/screens/SetupScreen.tsx
 import React, { useState } from 'react';
+import { Brain, Mic, Wifi, CheckCircle2, ChevronRight } from 'lucide-react';
 import { brain, voice, i18n } from '../../api';
 
 interface SetupScreenProps {
@@ -14,79 +15,148 @@ export const SetupScreen: React.FC<SetupScreenProps> = ({ onComplete }) => {
 
   const handleStartDownload = async () => {
     setIsDownloading(true);
-
     try {
-      // Parallel model initialization simulation
       await Promise.all([
         brain.initBrain((p) => setBrainProgress(p)),
         voice.initVoice((p) => setVoiceProgress(p)),
       ]);
       setIsDone(true);
-      setTimeout(onComplete, 1000);
+      setTimeout(onComplete, 1200);
     } catch {
-      // Never block the user
       setIsDone(true);
-      setTimeout(onComplete, 1000);
+      setTimeout(onComplete, 1200);
     } finally {
       setIsDownloading(false);
     }
   };
 
   return (
-    <div className="p-6 max-w-sm mx-auto space-y-6 pt-10 text-center">
-      <div className="text-5xl">🧠 📡</div>
+    <div className="anim-fade-in" style={{
+      padding: '48px 20px 96px', maxWidth: '420px', margin: '0 auto',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '28px',
+    }}>
+      {/* Icon cluster */}
+      <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        {[
+          { Icon: Brain, color: 'var(--accent-blue)', bg: 'var(--accent-blue-l)' },
+          { Icon: Wifi, color: 'var(--accent-teal)', bg: 'var(--accent-teal-l)' },
+          { Icon: Mic, color: 'var(--accent-lavender)', bg: 'var(--accent-lav-l)' },
+        ].map(({ Icon, color, bg }, i) => (
+          <div key={i} style={{
+            width: '52px', height: '52px', borderRadius: '16px',
+            background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: 'var(--shadow-sm)',
+          }}>
+            <Icon size={22} style={{ color }} />
+          </div>
+        ))}
+      </div>
 
-      <div className="space-y-2">
-        <h2 className="text-xl font-black text-slate-900">{i18n.t('offlineBrainSetup')}</h2>
-        <p className="text-xs text-slate-600 leading-relaxed">
-          Pre-load offline AI models so voice and personalized tutoring work without internet.
+      {/* Heading */}
+      <div style={{ textAlign: 'center' }}>
+        <h2 style={{ fontSize: '22px', fontWeight: 900, color: 'var(--text-primary)', marginBottom: '8px' }}>
+          {i18n.t('offlineBrainSetup')}
+        </h2>
+        <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>
+          Pre-load offline AI models so voice and personalised tutoring work without internet.
         </p>
       </div>
 
-      <div className="space-y-4 bg-white p-5 rounded-2xl border border-slate-200 shadow-xs text-left">
-        {/* Brain Model Progress */}
-        <div className="space-y-1.5">
-          <div className="flex justify-between text-xs font-bold text-slate-700">
-            <span>Tutor SLM (Qwen / wllama)</span>
-            <span className="text-indigo-600">{brainProgress}%</span>
+      {/* Progress card */}
+      <div style={{
+        width: '100%', background: 'var(--bg-card)', borderRadius: '20px',
+        padding: '20px', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)',
+        display: 'flex', flexDirection: 'column', gap: '16px',
+      }}>
+        {/* Brain model */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Brain size={13} style={{ color: 'var(--accent-blue)' }} />
+              <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                Tutor SLM (Qwen / wllama)
+              </span>
+            </div>
+            <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--accent-blue)' }}>
+              {brainProgress}%
+            </span>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-            <div
-              className="bg-indigo-600 h-full rounded-full transition-all duration-300"
-              style={{ width: `${brainProgress}%` }}
-            />
+          <div style={{ width: '100%', height: '7px', background: 'var(--bg-muted)', borderRadius: '99px', overflow: 'hidden' }}>
+            <div style={{
+              height: '100%', width: `${brainProgress}%`,
+              background: 'var(--accent-blue)', borderRadius: '99px',
+              transition: 'width 0.3s ease',
+            }} />
           </div>
         </div>
 
-        {/* Voice Model Progress */}
-        <div className="space-y-1.5">
-          <div className="flex justify-between text-xs font-bold text-slate-700">
-            <span>Vernacular Voice (Whisper / Piper)</span>
-            <span className="text-emerald-600">{voiceProgress}%</span>
+        {/* Voice model */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Mic size={13} style={{ color: 'var(--accent-teal)' }} />
+              <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>
+                Vernacular Voice (Whisper / Piper)
+              </span>
+            </div>
+            <span style={{ fontSize: '12px', fontWeight: 800, color: 'var(--accent-teal)' }}>
+              {voiceProgress}%
+            </span>
           </div>
-          <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-            <div
-              className="bg-emerald-500 h-full rounded-full transition-all duration-300"
-              style={{ width: `${voiceProgress}%` }}
-            />
+          <div style={{ width: '100%', height: '7px', background: 'var(--bg-muted)', borderRadius: '99px', overflow: 'hidden' }}>
+            <div style={{
+              height: '100%', width: `${voiceProgress}%`,
+              background: 'var(--accent-teal)', borderRadius: '99px',
+              transition: 'width 0.3s ease',
+            }} />
           </div>
         </div>
+
+        {/* Done badge */}
+        {isDone && (
+          <div className="anim-slide-up" style={{
+            display: 'flex', alignItems: 'center', gap: '8px',
+            background: 'var(--accent-teal-l)', border: '1px solid var(--accent-teal)',
+            borderRadius: '10px', padding: '10px 14px',
+            fontSize: '13px', fontWeight: 700, color: 'var(--accent-teal)',
+          }}>
+            <CheckCircle2 size={14} /> Models ready — launching...
+          </div>
+        )}
       </div>
 
-      <div className="space-y-3">
+      {/* Actions */}
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <button
           onClick={handleStartDownload}
           disabled={isDownloading || isDone}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl text-sm shadow-md transition-all active:scale-[0.98]"
+          className="btn-press"
+          style={{
+            width: '100%', padding: '16px', borderRadius: '16px',
+            background: isDownloading || isDone ? 'var(--bg-muted)' : 'var(--accent-blue)',
+            color: isDownloading || isDone ? 'var(--text-muted)' : '#fff',
+            fontWeight: 800, fontSize: '14px', border: 'none',
+            cursor: isDownloading || isDone ? 'not-allowed' : 'pointer',
+            boxShadow: isDownloading || isDone ? 'none' : 'var(--shadow-md)',
+            transition: 'all 0.2s ease',
+          }}
         >
-          {isDownloading ? 'Downloading Models...' : isDone ? 'Ready! Starting...' : i18n.t('downloadModels')}
+          {isDownloading ? 'Downloading Models…' : isDone ? 'Ready! Starting…' : i18n.t('downloadModels')}
         </button>
 
         <button
           onClick={onComplete}
-          className="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold py-3 rounded-2xl text-xs transition-colors"
+          style={{
+            width: '100%', padding: '13px', borderRadius: '14px',
+            background: 'none', border: '1px solid var(--border)',
+            color: 'var(--text-muted)', fontWeight: 600, fontSize: '13px',
+            cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
+            transition: 'background 0.15s ease',
+          }}
+          onMouseEnter={e => (e.currentTarget.style.background = 'var(--bg-muted)')}
+          onMouseLeave={e => (e.currentTarget.style.background = 'none')}
         >
-          {i18n.t('skipSetup')}
+          {i18n.t('skipSetup')} <ChevronRight size={13} />
         </button>
       </div>
     </div>

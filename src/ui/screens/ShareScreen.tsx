@@ -1,6 +1,7 @@
 // src/ui/screens/ShareScreen.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import QRCode from 'qrcode';
+import { Upload, Download, Camera, CameraOff, Share2, CheckCircle } from 'lucide-react';
 import { data, i18n } from '../../api';
 
 export const ShareScreen: React.FC = () => {
@@ -17,9 +18,7 @@ export const ShareScreen: React.FC = () => {
         try {
           const url = await QRCode.toDataURL(str, { width: 220, margin: 2 });
           setQrDataUrl(url);
-        } catch {
-          // ignore
-        }
+        } catch { /* ignore */ }
       }
     });
   }, []);
@@ -28,16 +27,13 @@ export const ShareScreen: React.FC = () => {
     const blob = new Blob([packString], { type: 'application/octet-stream' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `offline_lessons_${Date.now()}.pack`;
-    a.click();
+    a.href = url; a.download = `offline_lessons_${Date.now()}.pack`; a.click();
     URL.revokeObjectURL(url);
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = async (event) => {
       const content = event.target?.result as string;
@@ -51,26 +47,16 @@ export const ShareScreen: React.FC = () => {
   };
 
   const toggleScanner = async () => {
-    if (isScanning) {
-      setIsScanning(false);
-      return;
-    }
+    if (isScanning) { setIsScanning(false); return; }
     setIsScanning(true);
-    // Dynamic import for html5-qrcode to keep initial bundle light
     try {
       const { Html5QrcodeScanner } = await import('html5-qrcode');
-      const scanner = new Html5QrcodeScanner(
-        'qr-reader-container',
-        { fps: 10, qrbox: { width: 200, height: 200 } },
-        false
-      );
-
+      const scanner = new Html5QrcodeScanner('qr-reader-container', { fps: 10, qrbox: { width: 200, height: 200 } }, false);
       scanner.render(
         async (decodedText) => {
           const added = await data.importPack(decodedText);
           setImportStatus(`QR Scanned! Added ${added} lesson(s).`);
-          scanner.clear();
-          setIsScanning(false);
+          scanner.clear(); setIsScanning(false);
         },
         () => {}
       );
@@ -81,81 +67,143 @@ export const ShareScreen: React.FC = () => {
   };
 
   return (
-    <div className="p-4 space-y-6 pb-24 max-w-lg mx-auto">
+    <div style={{
+      padding: '24px 16px 96px', maxWidth: '560px', margin: '0 auto',
+      display: 'flex', flexDirection: 'column', gap: '20px',
+    }}>
       {/* Header */}
-      <div className="space-y-1 text-center">
-        <h2 className="text-xl font-extrabold text-slate-900">{i18n.t('share')}</h2>
-        <p className="text-xs text-slate-500">
-          Share lessons peer-to-peer via QR code or file without internet
+      <div className="anim-slide-up" style={{ textAlign: 'center' }}>
+        <div style={{
+          width: '52px', height: '52px', borderRadius: '16px',
+          background: 'var(--accent-blue-l)', display: 'flex',
+          alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px',
+        }}>
+          <Share2 size={22} style={{ color: 'var(--accent-blue)' }} />
+        </div>
+        <h2 style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '4px' }}>
+          {i18n.t('share')}
+        </h2>
+        <p style={{ fontSize: '13px', color: 'var(--text-muted)', margin: 0 }}>
+          Share lessons peer-to-peer via QR code or file — no internet needed
         </p>
       </div>
 
-      {/* Success Notification */}
+      {/* Success toast */}
       {importStatus && (
-        <div className="bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-bold p-3 rounded-xl text-center shadow-xs animate-bounce">
-          {importStatus}
+        <div className="anim-slide-up" style={{
+          display: 'flex', alignItems: 'center', gap: '8px',
+          background: 'var(--accent-teal-l)', border: '1px solid var(--accent-teal)',
+          borderRadius: '12px', padding: '12px 16px',
+          fontSize: '13px', fontWeight: 700, color: 'var(--accent-teal)',
+        }}>
+          <CheckCircle size={15} /> {importStatus}
         </div>
       )}
 
-      {/* Section 1: Export */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
-        <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-          <span>📤</span> {i18n.t('exportTitle')}
-        </h3>
+      {/* Export card */}
+      <div className="anim-slide-up card-lift" style={{
+        animationDelay: '0.08s',
+        background: 'var(--bg-card)', borderRadius: '20px',
+        padding: '20px', border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '16px',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Upload size={15} style={{ color: 'var(--accent-blue)' }} />
+          <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+            {i18n.t('exportTitle')}
+          </h3>
+        </div>
 
         {qrDataUrl ? (
-          <div className="flex flex-col items-center justify-center space-y-2 p-2 bg-slate-50 rounded-xl border border-slate-100">
-            <img src={qrDataUrl} alt="Lesson Pack QR" className="w-52 h-52 rounded-lg" />
-            <span className="text-[11px] text-slate-500">Scan this on another phone</span>
+          <div style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+            background: 'var(--bg-muted)', borderRadius: '14px', padding: '16px',
+            border: '1px solid var(--border)',
+          }}>
+            <img src={qrDataUrl} alt="Lesson Pack QR Code" style={{ width: '200px', height: '200px', borderRadius: '10px' }} />
+            <span style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>
+              Scan on another phone to receive lessons
+            </span>
           </div>
         ) : (
-          <p className="text-xs text-slate-500">
-            Lesson pack is optimized for file sharing.
+          <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: 0 }}>
+            Pack is optimised for file sharing (too large for QR).
           </p>
         )}
 
         <button
           onClick={handleDownloadFile}
-          className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs transition-all shadow-xs flex items-center justify-center gap-2"
+          className="btn-press"
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+            padding: '14px', borderRadius: '14px',
+            background: 'var(--text-primary)', color: 'var(--bg-base)',
+            fontWeight: 700, fontSize: '13px', border: 'none',
+            cursor: 'pointer', boxShadow: 'var(--shadow-sm)',
+          }}
         >
-          <span>💾</span> {i18n.t('downloadPack')}
+          <Download size={14} /> {i18n.t('downloadPack')}
         </button>
       </div>
 
-      {/* Section 2: Receive / Import */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
-        <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
-          <span>📥</span> {i18n.t('scanTitle')}
-        </h3>
+      {/* Import card */}
+      <div className="anim-slide-up card-lift" style={{
+        animationDelay: '0.16s',
+        background: 'var(--bg-card)', borderRadius: '20px',
+        padding: '20px', border: '1px solid var(--border)',
+        boxShadow: 'var(--shadow-sm)', display: 'flex', flexDirection: 'column', gap: '16px',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Download size={15} style={{ color: 'var(--accent-teal)' }} />
+          <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+            {i18n.t('scanTitle')}
+          </h3>
+        </div>
 
-        <div className="grid grid-cols-2 gap-3">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
           <button
             onClick={toggleScanner}
-            className="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold p-3 rounded-xl border border-indigo-200 text-xs flex flex-col items-center gap-1.5 transition-colors"
+            className="btn-press"
+            aria-label={isScanning ? 'Close QR scanner' : 'Open QR scanner'}
+            style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+              padding: '16px 12px', borderRadius: '14px',
+              background: isScanning ? 'var(--accent-amber-l)' : 'var(--accent-blue-l)',
+              border: `1px solid ${isScanning ? 'var(--accent-amber)' : 'var(--border)'}`,
+              color: isScanning ? 'var(--accent-amber)' : 'var(--accent-blue)',
+              fontWeight: 700, fontSize: '12px', cursor: 'pointer',
+            }}
           >
-            <span className="text-xl">📷</span>
-            <span>{isScanning ? 'Close Scanner' : 'Scan QR'}</span>
+            {isScanning ? <CameraOff size={20} /> : <Camera size={20} />}
+            {isScanning ? 'Close Scanner' : 'Scan QR'}
           </button>
 
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold p-3 rounded-xl border border-slate-200 text-xs flex flex-col items-center gap-1.5 transition-colors"
+            className="btn-press"
+            aria-label="Upload pack file"
+            style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+              padding: '16px 12px', borderRadius: '14px',
+              background: 'var(--bg-muted)', border: '1px solid var(--border)',
+              color: 'var(--text-secondary)', fontWeight: 700, fontSize: '12px', cursor: 'pointer',
+            }}
           >
-            <span className="text-xl">📁</span>
-            <span>{i18n.t('uploadPack')}</span>
+            <Upload size={20} />
+            {i18n.t('uploadPack')}
           </button>
         </div>
 
         <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileUpload}
-          accept=".pack,.json,.txt"
-          className="hidden"
+          type="file" ref={fileInputRef} onChange={handleFileUpload}
+          accept=".pack,.json,.txt" style={{ display: 'none' }}
         />
 
         {isScanning && (
-          <div id="qr-reader-container" className="rounded-xl overflow-hidden border border-slate-200 mt-2" />
+          <div id="qr-reader-container" style={{
+            borderRadius: '14px', overflow: 'hidden',
+            border: '1px solid var(--border)', marginTop: '4px',
+          }} />
         )}
       </div>
     </div>
