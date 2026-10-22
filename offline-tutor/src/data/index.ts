@@ -8,6 +8,7 @@ import {
   addXP as _addXP,
   completeModule as _completeModule,
 } from './gamification';
+import { exportPack as _exportPack, importPack as _importPack } from './pack';
 
 let _initialized = false;
 
@@ -55,12 +56,12 @@ export async function completeModule(moduleId: string): Promise<Progress> {
   return _completeModule(moduleId);
 }
 
-export async function exportPack(_moduleIds?: string[]): Promise<string> {
-  return '';
+export async function exportPack(moduleIds?: string[]): Promise<string> {
+  return _exportPack(moduleIds);
 }
 
-export async function importPack(_pack: string): Promise<{ added: number }> {
-  return { added: 0 };
+export async function importPack(pack: string): Promise<{ added: number }> {
+  return _importPack(pack);
 }
 
 export function getSyncStatus(): SyncStatus {
