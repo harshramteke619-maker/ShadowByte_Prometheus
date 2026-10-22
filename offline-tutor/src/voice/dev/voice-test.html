@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Voice test (Sayal)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 12px; }
+    button { padding: 14px 16px; margin: 4px; font-size: 16px; }
+    pre { white-space: pre-wrap; font-size: 12px; background: #f3f3f3; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h3>Voice test (dev only, do not ship)</h3>
+  <div>
+    <button data-lang="en">Speak EN</button>
+    <button data-lang="hi">Speak HI</button>
+    <button data-lang="mr">Speak MR</button>
+    <button id="stop">Stop</button>
+    <button id="refresh">Refresh list</button>
+  </div>
+  <h4>Status (localVoices must be &gt; 0 for airplane mode)</h4>
+  <pre id="status">loading voices…</pre>
+  <h4>en / hi / mr voices, LOCAL first (local = works in airplane mode)</h4>
+  <pre id="voices"></pre>
+
+  <script type="module">
+    // Plain JS here on purpose: Vite does not transpile TS inside inline HTML scripts.
+    import { speak, stopSpeaking, loadVoices, getTtsVoices } from '/src/voice/speak.ts';
+
+    const samples = {
+      en: 'Photosynthesis is how plants make food using sunlight.',
+      hi: 'प्रकाश संश्लेषण वह क्रिया है जिससे पौधे सूरज की रोशनी से भोजन बनाते हैं।',
+      mr: 'प्रकाशसंश्लेषण म्हणजे झाडे सूर्यप्रकाशातून अन्न तयार करतात.',
+    };
+
+    const statusEl = document.getElementById('status');
+    const voicesEl = document.getElementById('voices');
+    const tag = v => v.lang.toLowerCase().replace('_', '-');
+
+    function render() {
+      const all = speechSynthesis.getVoices();
+      const mine = all.filter(v => /^(en|hi|mr)/.test(tag(v)));
+      const count = (p) => mine.filter(v => tag(v).startsWith(p) && v.localService).length;
+      statusEl.textContent = JSON.stringify({
+        ttsVoices: getTtsVoices(),
+        localVoices: { en: count('en'), hi: count('hi'), mr: count('mr') },
+        totalVoices: all.length,
+      }, null, 2);
+      voicesEl.textContent = [...mine]
+        .sort((a, b) => Number(b.localService) - Number(a.localService))
+        .map(v => `${v.name} | ${v.lang} | ${v.localService ? 'local' : 'NETWORK'}`)
+        .join('\n') || 'no en/hi/mr voices found';
+    }
+
+    await loadVoices();
+    render();
+    speechSynthesis.addEventListener('voiceschanged', () => setTimeout(render, 0)); // list can grow after load
+    document.getElementById('refresh').addEventListener('click', render);
+
+    document.querySelectorAll('button[data-lang]').forEach(b =>
+      b.addEventListener('click', () => speak(samples[b.dataset.lang], b.dataset.lang)));
+    document.getElementById('stop').addEventListener('click', stopSpeaking);
+  </script>
+</body>
+</html>
