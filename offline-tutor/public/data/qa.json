@@ -1,0 +1,12 @@
+{ "version": 1, "entries": [
+ { "id": "qa-photosynthesis", "keywords": ["photosynthesis", "प्रकाश संश्लेषण", "प्रकाशसंश्लेषण", "plants food"],
+   "q": { "en": "What is photosynthesis?", "hi": "प्रकाश संश्लेषण क्या है?", "mr": "प्रकाशसंश्लेषण म्हणजे काय?" },
+   "a": { "en": "Plants make food from sunlight, water and CO2. Like a kitchen that runs on sunlight.",
+          "hi": "पौधे सूर्य के प्रकाश, पानी और CO2 से भोजन बनाते हैं। जैसे धूप से चलने वाली रसोई।",
+          "mr": "वनस्पती सूर्यप्रकाश, पाणी आणि CO2 वापरून अन्न बनवतात. जणू सूर्यप्रकाशावर चालणारे स्वयंपाकघर." } },
+ { "id": "qa-water-cycle", "keywords": ["water cycle", "जल चक्र", "जलचक्र", "rain", "बारिश", "पाऊस"],
+   "q": { "en": "What is the water cycle?", "hi": "जल चक्र क्या है?", "mr": "जलचक्र म्हणजे काय?" },
+   "a": { "en": "Water rises as vapour, makes clouds, and comes back as rain.",
+          "hi": "पानी भाप बनकर ऊपर जाता है, बादल बनाता है और बारिश बनकर लौटता है।",
+          "mr": "पाणी वाफ होऊन वर जाते, ढग बनवते आणि पाऊस होऊन परत येते." } }
+] }
