@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "entries": [
+    {
+      "id": "qa-1",
+      "keywords": ["photosynthesis", "plants", "sunlight", "food"],
+      "q": {
+        "en": "How do plants make food?",
+        "hi": "पौधे भोजन कैसे बनाते हैं?",
+        "mr": "वनस्पती अन्न कसे तयार करतात?"
+      },
+      "a": {
+        "en": "Through photosynthesis, green plants turn sunlight, water, and CO2 into sugar and oxygen.",
+        "hi": "प्रकाश संश्लेषण द्वारा, हरे पौधे धूप, पानी और कार्बन डाइऑक्साइड को भोजन और ऑक्सीजन में बदलते हैं।",
+        "mr": "प्रकाशसंश्लेषणाद्वारे, हिरव्या वनस्पती सूर्यप्रकाश, पाणी आणि CO2 चे रूपांतर अन्नात आणि ऑक्सिजनमध्ये करतात."
+      }
+    }
+  ]
+}

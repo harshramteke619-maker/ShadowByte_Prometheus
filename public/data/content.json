@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "modules": [
+    {
+      "id": "mod-1",
+      "subject": "Science - Grade 8",
+      "title": {
+        "en": "Photosynthesis & Plant Life",
+        "hi": "प्रकाश संश्लेषण और पादप जीवन",
+        "mr": "प्रकाशसंश्लेषण आणि वनस्पती जीवन"
+      },
+      "explanation": {
+        "en": "Plants produce food using carbon dioxide from air, water from roots, and sunlight absorbed by chlorophyll. Oxygen is released as a vital byproduct.",
+        "hi": "पौधे हवा से कार्बन डाइऑक्साइड, जड़ों से पानी और क्लोरोफिल द्वारा अवशोषित सूर्य के प्रकाश का उपयोग करके भोजन बनाते हैं। ऑक्सीजन एक उपोत्पाद के रूप में निकलती है।",
+        "mr": "वनस्पती हवेतील कार्बन डायऑक्साइड, मुळांमधील पाणी आणि क्लोरोफिलने शोषलेला सूर्यप्रकाश वापरून अन्न तयार करतात. ऑक्सिजन बाहेर सोडला जातो."
+      },
+      "visual": "🌱 ☀️ ➡️ 🍃 ➡️ 💨 O₂",
+      "quiz": [
+        {
+          "id": "q-1-1",
+          "moduleId": "mod-1",
+          "q": {
+            "en": "What gas do plants absorb during photosynthesis?",
+            "hi": "प्रकाश संश्लेषण के दौरान पौधे कौन सी गैस अवशोषित करते हैं?",
+            "mr": "प्रकाशसंश्लेषणादरम्यान वनस्पती कोणता वायू शोषून घेतात?"
+          },
+          "options": {
+            "en": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Helium"],
+            "hi": ["ऑक्सीजन", "कार्बन डाइऑक्साइड", "नाइट्रोजन", "हीलियम"],
+            "mr": ["ऑक्सिजन", "कार्बन डायऑक्साइड", "नायट्रोजन", "हेलियम"]
+          },
+          "answerIndex": 1,
+          "hint": {
+            "en": "It is the gas that animals and humans exhale.",
+            "hi": "यह वह गैस है जो मनुष्य सांस छोड़ते समय निकालते हैं।",
+            "mr": "हा तो वायू आहे जो मानव श्वास सोडताना बाहेर टाकतात."
+          }
+        }
+      ]
+    }
+  ]
+}
