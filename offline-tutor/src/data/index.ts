@@ -9,6 +9,11 @@ import {
   completeModule as _completeModule,
 } from './gamification';
 import { exportPack as _exportPack, importPack as _importPack } from './pack';
+import {
+  startSyncListeners,
+  getSyncStatus as _getSyncStatus,
+  onSyncStatus as _onSyncStatus,
+} from './sync';
 
 let _initialized = false;
 
@@ -22,6 +27,7 @@ export async function initData(): Promise<void> {
       await db.modules.bulkPut(json.modules);
     }
     await navigator.storage?.persist?.();
+    startSyncListeners();
     _initialized = true;
   } catch {
     // swallow – offline-first, data may already exist
@@ -65,9 +71,9 @@ export async function importPack(pack: string): Promise<{ added: number }> {
 }
 
 export function getSyncStatus(): SyncStatus {
-  return 'offline';
+  return _getSyncStatus();
 }
 
-export function onSyncStatus(_cb: (s: SyncStatus) => void): () => void {
-  return () => {};
+export function onSyncStatus(cb: (s: SyncStatus) => void): () => void {
+  return _onSyncStatus(cb);
 }
