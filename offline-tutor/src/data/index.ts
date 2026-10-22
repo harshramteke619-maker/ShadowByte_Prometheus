@@ -3,6 +3,11 @@ import type { LessonModule, QuizQuestion, Progress, SyncStatus } from '../contra
 import { db } from './db';
 import { getProgress as _getProgress, saveProgress as _saveProgress } from './progress';
 import { getModules as _getModules, getQuiz as _getQuiz } from './quiz';
+import {
+  updateMastery as _updateMastery,
+  addXP as _addXP,
+  completeModule as _completeModule,
+} from './gamification';
 
 let _initialized = false;
 
@@ -38,16 +43,16 @@ export async function saveProgress(patch: Partial<Progress>): Promise<Progress> 
   return _saveProgress(patch);
 }
 
-export async function updateMastery(_moduleId: string, _correct: boolean): Promise<number> {
-  return 0;
+export async function updateMastery(moduleId: string, correct: boolean): Promise<number> {
+  return _updateMastery(moduleId, correct);
 }
 
-export async function addXP(_n: number): Promise<Progress> {
-  return _getProgress();
+export async function addXP(n: number): Promise<Progress> {
+  return _addXP(n);
 }
 
-export async function completeModule(_moduleId: string): Promise<Progress> {
-  return _getProgress();
+export async function completeModule(moduleId: string): Promise<Progress> {
+  return _completeModule(moduleId);
 }
 
 export async function exportPack(_moduleIds?: string[]): Promise<string> {
