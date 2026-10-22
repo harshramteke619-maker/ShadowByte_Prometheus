@@ -1,0 +1,20 @@
+{ "version": 1, "modules": [
+ { "id": "sci-photosynthesis", "subject": "science", "visual": "🌱☀️💧",
+   "title": { "en": "Photosynthesis", "hi": "प्रकाश संश्लेषण", "mr": "प्रकाशसंश्लेषण" },
+   "explanation": {
+     "en": "Plants make their own food using sunlight, water and carbon dioxide. This is called photosynthesis.",
+     "hi": "पौधे सूर्य के प्रकाश, पानी और कार्बन डाइऑक्साइड से अपना भोजन बनाते हैं। इसे प्रकाश संश्लेषण कहते हैं।",
+     "mr": "वनस्पती सूर्यप्रकाश, पाणी आणि कार्बन डायऑक्साइड वापरून स्वतःचे अन्न तयार करतात. याला प्रकाशसंश्लेषण म्हणतात." },
+   "quiz": [ { "id": "q-photo-1", "moduleId": "sci-photosynthesis", "answerIndex": 1,
+     "q": { "en": "Which gas do plants take in for photosynthesis?", "hi": "प्रकाश संश्लेषण के लिए पौधे कौन-सी गैस लेते हैं?", "mr": "प्रकाशसंश्लेषणासाठी वनस्पती कोणता वायू घेतात?" },
+     "options": { "en": ["Oxygen", "Carbon dioxide", "Nitrogen"], "hi": ["ऑक्सीजन", "कार्बन डाइऑक्साइड", "नाइट्रोजन"], "mr": ["ऑक्सिजन", "कार्बन डायऑक्साइड", "नायट्रोजन"] } } ] },
+ { "id": "sci-water-cycle", "subject": "science", "visual": "🌊☁️🌧️",
+   "title": { "en": "Water Cycle", "hi": "जल चक्र", "mr": "जलचक्र" },
+   "explanation": {
+     "en": "Water evaporates from oceans, forms clouds, and falls as rain. This repeats again and again: the water cycle.",
+     "hi": "समुद्र का पानी भाप बनकर उड़ता है, बादल बनते हैं और बारिश होती है। यह चक्र बार-बार चलता है, इसे जल चक्र कहते हैं।",
+     "mr": "समुद्राचे पाणी वाफ होऊन उडते, ढग तयार होतात आणि पाऊस पडतो. हे चक्र पुन्हा पुन्हा चालते, याला जलचक्र म्हणतात." },
+   "quiz": [ { "id": "q-water-1", "moduleId": "sci-water-cycle", "answerIndex": 0,
+     "q": { "en": "What turns water into vapour?", "hi": "पानी को भाप कौन बनाता है?", "mr": "पाण्याची वाफ कशामुळे होते?" },
+     "options": { "en": ["Sun's heat", "Moonlight", "Rocks"], "hi": ["सूर्य की गर्मी", "चाँदनी", "पत्थर"], "mr": ["सूर्याची उष्णता", "चांदणे", "दगड"] } } ] }
+] }
