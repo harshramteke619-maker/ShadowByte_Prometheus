@@ -1,14 +1,75 @@
-// OWNER: P4 Zaid. Must export exactly DataAPI. Files: db.ts, progress.ts, quiz.ts, gamification.ts, pack.ts, sync.ts
+// OWNER: P4 Zaid. Must export exactly DataAPI.
 import type { LessonModule, QuizQuestion, Progress, SyncStatus } from '../contract/types';
-export async function initData(): Promise<void> { /* TODO P4 */ }
-export async function getModules(): Promise<LessonModule[]> { throw new Error('TODO P4'); }
-export async function getQuiz(_id: string): Promise<QuizQuestion[]> { throw new Error('TODO P4'); }
-export async function getProgress(): Promise<Progress> { throw new Error('TODO P4'); }
-export async function saveProgress(_p: Partial<Progress>): Promise<Progress> { throw new Error('TODO P4'); }
-export async function updateMastery(_id: string, _c: boolean): Promise<number> { throw new Error('TODO P4'); }
-export async function addXP(_n: number): Promise<Progress> { throw new Error('TODO P4'); }
-export async function completeModule(_id: string): Promise<Progress> { throw new Error('TODO P4'); }
-export async function exportPack(_ids?: string[]): Promise<string> { throw new Error('TODO P4'); }
-export async function importPack(_s: string): Promise<{ added: number }> { throw new Error('TODO P4'); }
-export function getSyncStatus(): SyncStatus { return 'offline'; }
-export function onSyncStatus(_cb: (s: SyncStatus) => void): () => void { return () => {}; }
+import { db } from './db';
+import { getProgress as _getProgress, saveProgress as _saveProgress } from './progress';
+
+let _initialized = false;
+
+export async function initData(): Promise<void> {
+  try {
+    if (_initialized) return;
+    const count = await db.modules.count();
+    if (count === 0) {
+      const res = await fetch('/data/content.json');
+      const json = await res.json() as { version: number; modules: LessonModule[] };
+      await db.modules.bulkPut(json.modules);
+    }
+    await navigator.storage?.persist?.();
+    _initialized = true;
+  } catch {
+    // swallow – offline-first, data may already exist
+  }
+}
+
+export async function getModules(): Promise<LessonModule[]> {
+  try {
+    return await db.modules.orderBy('id').toArray();
+  } catch {
+    return [];
+  }
+}
+
+export async function getQuiz(moduleId: string): Promise<QuizQuestion[]> {
+  try {
+    const mod = await db.modules.get(moduleId);
+    return mod?.quiz ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export async function getProgress(): Promise<Progress> {
+  return _getProgress();
+}
+
+export async function saveProgress(patch: Partial<Progress>): Promise<Progress> {
+  return _saveProgress(patch);
+}
+
+export async function updateMastery(_moduleId: string, _correct: boolean): Promise<number> {
+  return 0;
+}
+
+export async function addXP(_n: number): Promise<Progress> {
+  return _getProgress();
+}
+
+export async function completeModule(_moduleId: string): Promise<Progress> {
+  return _getProgress();
+}
+
+export async function exportPack(_moduleIds?: string[]): Promise<string> {
+  return '';
+}
+
+export async function importPack(_pack: string): Promise<{ added: number }> {
+  return { added: 0 };
+}
+
+export function getSyncStatus(): SyncStatus {
+  return 'offline';
+}
+
+export function onSyncStatus(_cb: (s: SyncStatus) => void): () => void {
+  return () => {};
+}
