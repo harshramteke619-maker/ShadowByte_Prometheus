@@ -101,13 +101,16 @@ export const TutorChatPreview: React.FC<Props> = ({ onNav }) => {
               background:'var(--bg-muted)',
             }}>
               <div style={{
-                width:38, height:38, borderRadius:'50%',
-                background:'var(--accent-blue)', color:'#fff',
+                width:38, height:38, borderRadius:10,
+                background:'var(--bg-card)',
+                border:'1px solid var(--border)',
                 display:'flex', alignItems:'center', justifyContent:'center',
-                fontSize:14, fontWeight:700, flexShrink:0,
-              }}>AI</div>
+                flexShrink:0, padding:4,
+              }}>
+                <img src="/logo.png" alt="Everlearn.ai" style={{ width:'100%', height:'100%', objectFit:'contain' }} />
+              </div>
               <div>
-                <div style={{ fontSize:14, fontWeight:700, color:'var(--text-primary)' }}>StudySpace Tutor</div>
+                <div style={{ fontSize:14, fontWeight:700, color:'var(--text-primary)' }}>Everlearn.ai Tutor</div>
                 <div style={{ display:'flex', alignItems:'center', gap:5, fontSize:11, color:'var(--accent-teal)' }}>
                   <span className="online-dot" style={{ display:'inline-block', width:6, height:6, borderRadius:'50%', background:'var(--accent-teal)' }} />
                   Online · Answers in your language

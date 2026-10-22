@@ -64,20 +64,23 @@ export const TopNav: React.FC<TopNavProps> = ({ current, onNav }) => {
           <button
             onClick={() => handleNav('home')}
             style={{ display:'flex', alignItems:'center', gap:10, background:'none', border:'none', cursor:'pointer' }}
-            aria-label="StudySpace home"
+            aria-label="Everlearn.ai home"
           >
-            <div style={{
-              width:36, height:36, borderRadius:10,
-              background:'var(--accent-blue)', display:'flex',
-              alignItems:'center', justifyContent:'center', flexShrink:0,
-            }}>
-              <BookOpen size={18} color="#fff" strokeWidth={2.2} />
-            </div>
+            <img
+              src="/logo.png"
+              alt="Everlearn.ai Logo"
+              style={{
+                height: 34,
+                width: 'auto',
+                objectFit: 'contain',
+                flexShrink: 0,
+              }}
+            />
             <div style={{ textAlign:'left' }}>
-              <div style={{ fontSize:16, fontWeight:700, color:'var(--text-primary)', lineHeight:1 }}>
-                StudySpace
+              <div style={{ fontSize:17, fontWeight:800, color:'var(--text-primary)', lineHeight:1.1, letterSpacing:'-0.01em' }}>
+                Everlearn<span style={{ color:'var(--accent-teal)' }}>.ai</span>
               </div>
-              <div style={{ fontSize:10, fontWeight:600, color:'var(--text-muted)', letterSpacing:'0.1em', textTransform:'uppercase' }}>
+              <div style={{ fontSize:10, fontWeight:600, color:'var(--text-muted)', letterSpacing:'0.08em', textTransform:'uppercase', marginTop:2 }}>
                 Offline · Free
               </div>
             </div>

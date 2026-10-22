@@ -11,12 +11,13 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: [
         'favicon.svg',
+        'logo.png',
         'images/hero.jpg',
         'data/*.json',
       ],
       manifest: {
-        name: 'StudySpace — Learn Together',
-        short_name: 'StudySpace',
+        name: 'Everlearn.ai — Learn Together',
+        short_name: 'Everlearn.ai',
         description: 'Offline-first AI study companion for students',
         theme_color: '#0f4c81',
         background_color: '#f8f6f1',
@@ -24,6 +25,7 @@ export default defineConfig({
         orientation: 'portrait-primary',
         start_url: '/',
         icons: [
+          { src: '/logo.png', sizes: '174x118', type: 'image/png' },
           { src: '/favicon.svg', sizes: '192x192 512x512', type: 'image/svg+xml' },
         ],
       },

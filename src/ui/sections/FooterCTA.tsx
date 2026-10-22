@@ -64,7 +64,12 @@ export const FooterCTA: React.FC<Props> = ({ onNav }) => {
           <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(180px, 1fr))', gap:32, marginBottom:40 }}
             className="footer-grid">
             <div>
-              <div style={{ fontSize:16, fontWeight:800, color:'var(--text-primary)', marginBottom:8 }}>StudySpace</div>
+              <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:8 }}>
+                <img src="/logo.png" alt="Everlearn.ai" style={{ height:26, width:'auto', objectFit:'contain' }} />
+                <div style={{ fontSize:17, fontWeight:800, color:'var(--text-primary)' }}>
+                  Everlearn<span style={{ color:'var(--accent-teal)' }}>.ai</span>
+                </div>
+              </div>
               <p style={{ fontSize:12.5, color:'var(--text-muted)', lineHeight:1.7, maxWidth:200 }}>
                 Free offline learning for every student, in their own language.
               </p>
@@ -109,7 +114,7 @@ export const FooterCTA: React.FC<Props> = ({ onNav }) => {
           }} />
           <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:10 }}>
             <p style={{ fontSize:12, color:'var(--text-muted)' }}>
-              © {year} StudySpace · Offline-first · No tracking · Built for students
+              © {year} Everlearn.ai · Offline-first · No tracking · Built for students
             </p>
             <p style={{ fontSize:12, color:'var(--text-muted)' }}>
               PWA v1.0 · NCERT-aligned content

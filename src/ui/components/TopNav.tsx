@@ -56,7 +56,7 @@ export const TopNav: React.FC<TopNavProps> = ({ currentTab, onChangeTab }) => {
                 <BookOpen className="w-5 h-5 text-white" strokeWidth={2.2} />
               </div>
               <div className="hidden sm:block">
-                <span className="text-lg font-bold text-navy-500 tracking-tight">StudySpace</span>
+                <span className="text-lg font-bold text-navy-500 tracking-tight">Everlearn.ai</span>
                 <span className="text-[10px] font-semibold text-sage-400 ml-1.5 tracking-widest uppercase">Offline</span>
               </div>
             </div>
