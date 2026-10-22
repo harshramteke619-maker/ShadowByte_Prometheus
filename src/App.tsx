@@ -1,8 +1,9 @@
 // src/App.tsx
 import React, { useState, useEffect } from 'react';
-import { TopNav } from './ui/components/TopNav';
-import { MobileNav, NavTab } from './ui/components/MobileNav';
-import { DashboardScreen } from './ui/screens/DashboardScreen';
+import { ThemeProvider } from './context/ThemeContext';
+import { TopNav, AppTab } from './ui/layout/TopNav';
+import { BottomNav } from './ui/layout/BottomNav';
+import { HomePage } from './ui/screens/HomePage';
 import { LessonScreen } from './ui/screens/LessonScreen';
 import { QuizScreen } from './ui/screens/QuizScreen';
 import { ChatScreen } from './ui/screens/ChatScreen';
@@ -10,107 +11,71 @@ import { ShareScreen } from './ui/screens/ShareScreen';
 import { SetupScreen } from './ui/screens/SetupScreen';
 import { i18n, data } from './api';
 
-export const App: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState<NavTab>('dashboard');
-  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
-  const [quizModuleId, setQuizModuleId] = useState<string | null>(null);
-  const [, setLangTick] = useState(0);
+const AppInner: React.FC = () => {
+  const [tab, setTab] = useState<AppTab>('home');
+  const [moduleId, setModuleId] = useState<string | null>(null);
+  const [quizId, setQuizId] = useState<string | null>(null);
+  const [, setTick] = useState(0);
 
-  // Force re-render when language changes
   useEffect(() => {
-    const unsub = i18n.onLangChange(() => setLangTick((t) => t + 1));
+    data.initData();
+    const unsub = i18n.onLangChange(() => setTick(t => t + 1));
     return () => unsub();
   }, []);
 
-  // Init data on mount
-  useEffect(() => {
-    data.initData();
-  }, []);
-
-  const handleSelectModule = (id: string) => {
-    if (!id) return;
-    setSelectedModuleId(id);
-    setQuizModuleId(null);
+  const navigate = (t: AppTab) => {
+    setTab(t);
+    setModuleId(null);
+    setQuizId(null);
+    // Scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleStartQuiz = (id: string) => {
-    setQuizModuleId(id);
-  };
+  const inSubScreen = Boolean(moduleId || quizId);
 
-  const handleBackToHome = () => {
-    setSelectedModuleId(null);
-    setQuizModuleId(null);
+  const renderMain = () => {
+    if (quizId) {
+      return <QuizScreen moduleId={quizId} onFinish={() => { setQuizId(null); setModuleId(null); }} />;
+    }
+    if (moduleId) {
+      return (
+        <LessonScreen
+          moduleId={moduleId}
+          onBack={() => setModuleId(null)}
+          onStartQuiz={(id) => setQuizId(id)}
+        />
+      );
+    }
+    switch (tab) {
+      case 'home':
+      case 'lessons':
+      case 'groups':
+      case 'progress':
+        return <HomePage onNav={(t) => { navigate(t); }} />;
+      case 'chat':     return <div style={{ maxWidth:720, margin:'0 auto', padding:'24px 16px 80px' }}><ChatScreen /></div>;
+      case 'share':    return <div style={{ maxWidth:720, margin:'0 auto', padding:'24px 16px 80px' }}><ShareScreen /></div>;
+      case 'setup':    return <div style={{ maxWidth:560, margin:'0 auto', padding:'24px 16px 80px' }}><SetupScreen onComplete={() => navigate('home')} /></div>;
+      default:         return <HomePage onNav={navigate} />;
+    }
   };
-
-  const handleOpenChat = () => {
-    setCurrentTab('chat');
-    setSelectedModuleId(null);
-    setQuizModuleId(null);
-  };
-
-  // Determine if we're in a sub-screen (lesson or quiz)
-  const inSubScreen = Boolean(selectedModuleId || quizModuleId);
 
   return (
-    <div className="min-h-screen relative">
-      {/* Ambient background shapes */}
-      <div className="ambient-shape ambient-shape-1" aria-hidden="true" />
-      <div className="ambient-shape ambient-shape-2" aria-hidden="true" />
-      <div className="ambient-shape ambient-shape-3" aria-hidden="true" />
+    <div style={{ minHeight:'100vh', background:'var(--bg-base)', transition:'background 0.25s ease' }}>
+      <TopNav current={tab} onNav={navigate} />
 
-      {/* Content layer */}
-      <div className="relative z-10 flex flex-col min-h-screen">
-        {/* Sticky top nav */}
-        <TopNav currentTab={currentTab} onChangeTab={(tab) => {
-          setCurrentTab(tab);
-          setSelectedModuleId(null);
-          setQuizModuleId(null);
-        }} />
+      <main id="main-content" tabIndex={-1} aria-label="Page content">
+        {renderMain()}
+      </main>
 
-        {/* Main content */}
-        <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          {quizModuleId ? (
-            <QuizScreen
-              moduleId={quizModuleId}
-              onFinish={() => {
-                setQuizModuleId(null);
-                setSelectedModuleId(null);
-              }}
-            />
-          ) : selectedModuleId ? (
-            <LessonScreen
-              moduleId={selectedModuleId}
-              onBack={handleBackToHome}
-              onStartQuiz={handleStartQuiz}
-            />
-          ) : (
-            <>
-              {currentTab === 'dashboard' && (
-                <DashboardScreen
-                  onSelectModule={handleSelectModule}
-                  onOpenChat={handleOpenChat}
-                />
-              )}
-              {currentTab === 'chat' && <ChatScreen />}
-              {currentTab === 'share' && <ShareScreen />}
-              {currentTab === 'setup' && (
-                <SetupScreen onComplete={() => setCurrentTab('dashboard')} />
-              )}
-            </>
-          )}
-        </main>
-      </div>
-
-      {/* Mobile bottom nav — hidden on desktop, hidden during sub-screens */}
-      {!inSubScreen && (
-        <MobileNav currentTab={currentTab} onChangeTab={(tab) => {
-          setCurrentTab(tab);
-          setSelectedModuleId(null);
-          setQuizModuleId(null);
-        }} />
-      )}
+      {!inSubScreen && <BottomNav current={tab} onNav={navigate} />}
     </div>
   );
 };
+
+const App: React.FC = () => (
+  <ThemeProvider>
+    <AppInner />
+  </ThemeProvider>
+);
 
 export default App;
