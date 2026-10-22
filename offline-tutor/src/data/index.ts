@@ -2,6 +2,7 @@
 import type { LessonModule, QuizQuestion, Progress, SyncStatus } from '../contract/types';
 import { db } from './db';
 import { getProgress as _getProgress, saveProgress as _saveProgress } from './progress';
+import { getModules as _getModules, getQuiz as _getQuiz } from './quiz';
 
 let _initialized = false;
 
@@ -22,20 +23,11 @@ export async function initData(): Promise<void> {
 }
 
 export async function getModules(): Promise<LessonModule[]> {
-  try {
-    return await db.modules.orderBy('id').toArray();
-  } catch {
-    return [];
-  }
+  return _getModules();
 }
 
 export async function getQuiz(moduleId: string): Promise<QuizQuestion[]> {
-  try {
-    const mod = await db.modules.get(moduleId);
-    return mod?.quiz ?? [];
-  } catch {
-    return [];
-  }
+  return _getQuiz(moduleId);
 }
 
 export async function getProgress(): Promise<Progress> {
