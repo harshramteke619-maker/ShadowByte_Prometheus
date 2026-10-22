@@ -1,4 +1,5 @@
 // OWNER: P4 Zaid. Must export exactly DataAPI.
+import './devtest';
 import type { LessonModule, QuizQuestion, Progress, SyncStatus } from '../contract/types';
 import { db } from './db';
 import { getProgress as _getProgress, saveProgress as _saveProgress } from './progress';
